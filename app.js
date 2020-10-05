@@ -234,9 +234,10 @@ class Interface {
     // Remove event listener
     this._board.removeEventListener("click", this._endingPointClickHandler);
 
-    // Get shortest path and render it
+    // Get shortest path and render it to screen
     this._path = this._pathfinder.findShortestPath(this._endingPoint);
-    this._textMessage.innerText = `Completed in ${this._path.length - 1} steps`;
+    const numSteps = this._path.length - 1;
+    this._textMessage.innerText = `Completed in ${numSteps} ${numSteps > 1 ? "steps" : "step"}`;
     this._renderPath();
   }
 
