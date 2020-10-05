@@ -134,23 +134,33 @@ class KnightPathfinder {
 }
 
 /*
- * View management
+ * App interface
  */
 
-class View {
+class Interface {
   constructor() {
-    this._rootDiv = document.getElementById("app");
     this._board = document.getElementById("board");
+    this._message = document.getElementById("message");
+
+    // Properties to be assigned later
+    this._startingPoint = null;
+    this._endingPoint = null;
+    this._pathfinder = null;
+    this._path = null;
+
+    // Bind 'this' context to event handlers
+    this._startingPointClickHandler = this._startingPointClickHandler.bind(this);
+    this._endingPointClickHandler = this._endingPointClickHandler.bind(this);
   }
 
   renderBoard() {
     const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i < 10; i++) {
+    for (let i = 0; i <= 9; i++) {
       // new row
       const row = document.createElement("tr");
 
-      for (let j = 0; j < 10; j++) {
+      for (let j = 0; j <= 9; j++) {
         // columns
         const rowNumber = 9 - i;
         const colNumber = j;
@@ -164,9 +174,72 @@ class View {
     }
 
     this._board.appendChild(fragment);
-    this._board.addEventListener("click", ({ target }) =>
-      console.log(target.id)
-    );
+  }
+
+  _renderPath() {
+    // Iterate over path excluding starting point
+    for (let i = 1; i < this._path.length; i++) {
+      const idString = this._idStringFromPosition(this._path[i]);
+      const square = document.getElementById(idString);
+      square.classList.add("active");
+      square.innerText = i;
+    }
+  }
+
+  setStartingPoint() {
+    this._message.innerText = "Choose a starting point";
+    // Add one event listener to parent instead of adding one to each individual square
+    this._board.addEventListener("click", this._startingPointClickHandler);
+  }
+
+  _setEndingPoint() {
+    this._message.innerText = "Choose an ending point";
+    this._board.addEventListener("click", this._endingPointClickHandler);
+  }
+
+  _startingPointClickHandler(event) {
+    const { target } = event;
+    // Check that the user clicked on a square rather than a part of the board itself (like the border)
+    if (target.id === "board") return;
+
+    // Parse position
+    this._startingPoint = this._parsePosition(target.id);
+
+    // Add starting position status to clicked square
+    target.classList.add("start");
+    target.innerText = "O";
+
+    // Remove event listener
+    this._board.removeEventListener("click", this._startingPointClickHandler);
+
+    // Initialize new pathfinder instance
+    this._pathfinder = new KnightPathfinder(this._startingPoint);
+
+    this._setEndingPoint();
+  }
+
+  _endingPointClickHandler(event) {
+    const { target } = event;
+
+    if (target.id === "board") return;
+
+    this._endingPoint = this._parsePosition(target.id);
+
+    // Remove event listener
+    this._board.removeEventListener("click", this._endingPointClickHandler);
+
+    // Get shortest path and render it
+    this._path = this._pathfinder.findShortestPath(this._endingPoint);
+    this._message.innerText = `Completed in ${this._path.length - 1} steps`;
+    this._renderPath();
+  }
+
+  _parsePosition(idString) {
+    return idString.split("-").map((num) => parseInt(num));
+  }
+
+  _idStringFromPosition(position) {
+    return position.join("-");
   }
 }
 
@@ -175,6 +248,7 @@ class View {
  */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const view = new View();
-  view.renderBoard();
+  const interface = new Interface();
+  interface.renderBoard();
+  interface.setStartingPoint();
 });
