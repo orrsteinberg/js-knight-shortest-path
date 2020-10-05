@@ -139,8 +139,10 @@ class KnightPathfinder {
 
 class Interface {
   constructor() {
+    // DOM elements
     this._board = document.getElementById("board");
-    this._message = document.getElementById("message");
+    this._textMessage = document.getElementById("message");
+    this._resetButton = document.getElementById("reset");
 
     // Properties to be assigned later
     this._startingPoint = null;
@@ -151,6 +153,10 @@ class Interface {
     // Bind 'this' context to event handlers
     this._startingPointClickHandler = this._startingPointClickHandler.bind(this);
     this._endingPointClickHandler = this._endingPointClickHandler.bind(this);
+    this._resetHandler = this._resetHandler.bind(this);
+
+    // Set up event handler for resetting the board
+    this._resetButton.addEventListener("click", this._resetHandler);
   }
 
   renderBoard() {
@@ -187,13 +193,13 @@ class Interface {
   }
 
   setStartingPoint() {
-    this._message.innerText = "Choose a starting point";
+    this._textMessage.innerText = "Choose a starting point";
     // Add one event listener to parent instead of adding one to each individual square
     this._board.addEventListener("click", this._startingPointClickHandler);
   }
 
   _setEndingPoint() {
-    this._message.innerText = "Choose an ending point";
+    this._textMessage.innerText = "Choose an ending point";
     this._board.addEventListener("click", this._endingPointClickHandler);
   }
 
@@ -230,8 +236,23 @@ class Interface {
 
     // Get shortest path and render it
     this._path = this._pathfinder.findShortestPath(this._endingPoint);
-    this._message.innerText = `Completed in ${this._path.length - 1} steps`;
+    this._textMessage.innerText = `Completed in ${this._path.length - 1} steps`;
     this._renderPath();
+  }
+
+  _resetHandler() {
+    // Clear board, render a new one and get new starting point
+    this._clearBoard();
+    this.renderBoard();
+    this.setStartingPoint();
+  }
+
+  _clearBoard() {
+    // Remove old board element, create a new empty one and append it to the original parent
+    this._board.remove();
+    this._board = document.createElement("tbody");
+    this._board.id = "board";
+    document.getElementById("board-parent").appendChild(this._board);
   }
 
   _parsePosition(idString) {
