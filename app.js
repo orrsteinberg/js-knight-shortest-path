@@ -132,3 +132,54 @@ class KnightPathfinder {
     return possibleMoves;
   }
 }
+
+/*
+ * View management
+ */
+
+class View {
+  constructor() {
+    this._rootDiv = document.getElementById("app");
+    this._board = document.getElementById("board");
+  }
+
+  renderBoard() {
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i < 10; i++) {
+      // new row
+      const row = document.createElement("tr");
+      if (i === 0 || i % 2 === 0) {
+        row.classList.add("even-row");
+      } else {
+        row.classList.add("odd-row");
+      }
+
+      for (let j = 0; j < 10; j++) {
+        // columns
+        const rowNumber = 9 - i;
+        const colNumber = j;
+        const square = document.createElement("td");
+        square.classList.add("square");
+        square.id = `${rowNumber}-${colNumber}`;
+        row.appendChild(square);
+      }
+
+      fragment.appendChild(row);
+    }
+
+    this._board.appendChild(fragment);
+    this._board.addEventListener("click", ({ target }) =>
+      console.log(target.id)
+    );
+  }
+}
+
+/*
+ * Initialize app
+ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const view = new View();
+  view.renderBoard();
+});

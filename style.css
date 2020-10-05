@@ -1,0 +1,54 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: content-box;
+}
+
+body {
+    font-family: Arial, sans-serif;
+    background: #1f7554;
+}
+
+#container {
+    backround: linear-gradient(brown, orange, to right);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 30px;
+    min-height: 100%;
+}
+
+h1 {
+    font-size: 3rem;
+    color: #fff;
+    text-shadow: 1px 1px 1px #222;
+}
+
+#board {
+    display: block;
+    margin: 20px;
+    border: 10px solid #8c2f2f;
+    box-shadow: 2px 8px 18px rgba(0, 0, 0, 0.8);
+}
+
+.square {
+    height: 40px;
+    width: 40px;
+}
+
+.odd-row .square:nth-child(even) {
+    background: #fff;
+}
+
+.odd-row .square:nth-child(odd) {
+    background: #222;
+}
+
+.even-row .square:nth-child(odd) {
+    background: #fff;
+}
+
+.even-row .square:nth-child(even) {
+    background: #222;
+}
