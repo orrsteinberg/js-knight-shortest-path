@@ -37,18 +37,18 @@ h1 {
     width: 40px;
 }
 
-.odd-row .square:nth-child(even) {
+#board tr:nth-child(odd) .square:nth-child(even) {
     background: #fff;
 }
 
-.odd-row .square:nth-child(odd) {
+#board tr:nth-child(odd) .square:nth-child(odd) {
     background: #222;
 }
 
-.even-row .square:nth-child(odd) {
+#board tr:nth-child(even) .square:nth-child(odd) {
     background: #fff;
 }
 
-.even-row .square:nth-child(even) {
+#board tr:nth-child(even) .square:nth-child(even) {
     background: #222;
 }

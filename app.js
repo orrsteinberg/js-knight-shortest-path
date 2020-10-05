@@ -149,11 +149,6 @@ class View {
     for (let i = 0; i < 10; i++) {
       // new row
       const row = document.createElement("tr");
-      if (i === 0 || i % 2 === 0) {
-        row.classList.add("even-row");
-      } else {
-        row.classList.add("odd-row");
-      }
 
       for (let j = 0; j < 10; j++) {
         // columns
