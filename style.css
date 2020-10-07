@@ -1,0 +1,81 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  background: #0e572b;
+}
+
+#container {
+  background: linear-gradient(brown, orange, to right);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 30px;
+  min-height: 100%;
+}
+
+h1 {
+  font-size: 3rem;
+  color: #fff;
+}
+
+/*
+* Message
+*/
+
+#message {
+  color: #fff;
+  text-align: center;
+}
+
+/*
+ * Chess Board
+ */
+
+#board {
+  display: block;
+  margin: 20px;
+  border: 10px solid #8c2f2f;
+  box-shadow: 2px 8px 18px rgba(0, 0, 0, 0.8);
+  cursor: cell;
+}
+
+#board tr:nth-child(odd) .square:nth-child(even) {
+  background: #fff;
+}
+
+#board tr:nth-child(odd) .square:nth-child(odd) {
+  background: #222;
+}
+
+#board tr:nth-child(even) .square:nth-child(odd) {
+  background: #fff;
+}
+
+#board tr:nth-child(even) .square:nth-child(even) {
+  background: #222;
+}
+
+#board tr .square {
+  height: 40px;
+  width: 40px;
+  text-align: center;
+  transition: all 0.2s ease-in;
+}
+
+#board tr .square.start {
+  background: #35c135 !important;
+  color: #fff;
+}
+
+#board tr .square.end {
+  background: #9dce31 !important;
+}
+
+#board tr .square.active {
+  background: #ffc2c4 !important;
+}

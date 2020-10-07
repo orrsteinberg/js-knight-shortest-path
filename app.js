@@ -38,14 +38,14 @@ class KnightPathfinder {
     if (!this._isValidPosition(endPosition))
       throw new Error(`Invalid board position: ${endPosition}`);
 
-    if (this._comparePositions(this._rootNode.position, endPosition)) return;
+    if (this.comparePositions(this._rootNode.position, endPosition)) return;
 
     // Run a breadth-first search along the tree to find shortest path to end position
     let queue = [...this._rootNode.children];
 
     while (queue.length > 0) {
       const currentNode = queue.shift();
-      if (this._comparePositions(currentNode.position, endPosition)) {
+      if (this.comparePositions(currentNode.position, endPosition)) {
         // Found it!
         const path = this._tracePath(currentNode);
         return path;
@@ -80,7 +80,7 @@ class KnightPathfinder {
         // Check that we're not repeating positions we've already considered
         if (
           this._positionsAlreadyConsidered.find((position) =>
-            this._comparePositions(position, move)
+            this.comparePositions(position, move)
           )
         ) {
           return;
@@ -99,17 +99,17 @@ class KnightPathfinder {
     }
   }
 
+  comparePositions(pos1, pos2) {
+    // Helper function because we can't directly compare arrays
+    return pos1[0] === pos2[0] && pos1[1] === pos2[1];
+  }
+
   _isValidPosition(position) {
     // Check if position is a tuple containing valid coordinates
     if (position.length !== 2) return false;
     const x = position[0];
     const y = position[1];
     return x >= 0 && x <= 9 && y >= 0 && y <= 9;
-  }
-
-  _comparePositions(pos1, pos2) {
-    // Helper function given that we can't directly compare arrays
-    return pos1[0] === pos2[0] && pos1[1] === pos2[1];
   }
 
   _generatePossibleMoves(position) {
@@ -132,3 +132,149 @@ class KnightPathfinder {
     return possibleMoves;
   }
 }
+
+/*
+ * App interface
+ */
+
+class Interface {
+  constructor() {
+    // DOM elements
+    this._board = document.getElementById("board");
+    this._textMessage = document.getElementById("message");
+    this._resetButton = document.getElementById("reset");
+
+    // Properties to be assigned later
+    this._startingPoint = null;
+    this._endingPoint = null;
+    this._pathfinder = null;
+    this._path = null;
+
+    // Bind 'this' context to event handlers
+    this._startingPointClickHandler = this._startingPointClickHandler.bind(this);
+    this._endingPointClickHandler = this._endingPointClickHandler.bind(this);
+    this._resetHandler = this._resetHandler.bind(this);
+
+    // Set up event handler for resetting the board
+    this._resetButton.addEventListener("click", this._resetHandler);
+  }
+
+  renderBoard() {
+    // Create a document fragment for more optimized rendering
+    const fragment = document.createDocumentFragment();
+
+    for (let i = 0; i <= 9; i++) {
+      // New row
+      const row = document.createElement("tr");
+
+      for (let j = 0; j <= 9; j++) {
+        // Squares
+        const rowNumber = 9 - i; // Count rows from the bottom up so reverse the index number
+        const colNumber = j;
+        const square = document.createElement("td");
+        square.classList.add("square");
+        square.id = `${colNumber}-${rowNumber}`;
+        row.appendChild(square);
+      }
+
+      fragment.appendChild(row);
+    }
+
+    this._board.appendChild(fragment);
+  }
+
+  _renderPath() {
+    // Iterate over path excluding starting point and highlight each square
+    for (let i = 1; i < this._path.length; i++) {
+      const idString = this._idStringFromPosition(this._path[i]);
+      const square = document.getElementById(idString);
+      square.classList.add("active");
+      square.innerText = i;
+    }
+  }
+
+  setStartingPoint() {
+    this._textMessage.innerText = "Choose a starting point";
+    // Add one event listener to parent instead of adding one to each individual square
+    this._board.addEventListener("click", this._startingPointClickHandler);
+  }
+
+  _setEndingPoint() {
+    this._textMessage.innerText = "Choose an ending point";
+    this._board.addEventListener("click", this._endingPointClickHandler);
+  }
+
+  _startingPointClickHandler(event) {
+    const { target } = event;
+    // Check that the user clicked on a square rather than a part of the board itself (like the border)
+    if (target.id === "board") return;
+
+    // Parse position
+    this._startingPoint = this._parsePosition(target.id);
+
+    // Add starting position status to clicked square
+    target.classList.add("start");
+    target.innerText = "O";
+
+    // Remove event listener
+    this._board.removeEventListener("click", this._startingPointClickHandler);
+
+    // Initialize new pathfinder instance
+    this._pathfinder = new KnightPathfinder(this._startingPoint);
+
+    this._setEndingPoint();
+  }
+
+  _endingPointClickHandler(event) {
+    const { target } = event;
+
+    if (target.id === "board") return;
+
+    this._endingPoint = this._parsePosition(target.id);
+
+    // Return if user clicked on the same position as the starting position
+    if (this._pathfinder.comparePositions(this._endingPoint, this._startingPoint)) return;
+
+    // Remove event listener
+    this._board.removeEventListener("click", this._endingPointClickHandler);
+
+    // Get shortest path and render it to screen
+    this._path = this._pathfinder.findShortestPath(this._endingPoint);
+    const numSteps = this._path.length - 1;
+    this._textMessage.innerText = `Completed in ${numSteps} ${numSteps > 1 ? "steps" : "step"}`;
+    this._renderPath();
+  }
+
+  _resetHandler() {
+    // Clear board, render a new one and get new starting point
+    this._clearBoard();
+    this.renderBoard();
+    this.setStartingPoint();
+  }
+
+  _clearBoard() {
+    // Remove old board element, create a new empty one and append it to the original parent
+    this._board.remove();
+    this._board = document.createElement("tbody");
+    this._board.id = "board";
+    document.getElementById("board-parent").appendChild(this._board);
+  }
+
+  _parsePosition(idString) {
+    return idString.split("-").map((num) => parseInt(num));
+  }
+
+  _idStringFromPosition(position) {
+    return position.join("-");
+  }
+}
+
+/*
+ * Initialize app
+ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const interface = new Interface();
+  interface.renderBoard();
+  interface.setStartingPoint();
+});
