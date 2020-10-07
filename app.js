@@ -232,8 +232,8 @@ class Interface {
 
     this._endingPoint = this._parsePosition(target.id);
 
-      // Return if user clicked on the same position as the starting position
-      if (this._pathfinder.comparePositions(this._endingPoint, this._startingPoint)) return;
+    // Return if user clicked on the same position as the starting position
+    if (this._pathfinder.comparePositions(this._endingPoint, this._startingPoint)) return;
 
     // Remove event listener
     this._board.removeEventListener("click", this._endingPointClickHandler);
