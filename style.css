@@ -1,3 +1,7 @@
+/*
+ * General
+ */
+
 * {
   margin: 0;
   padding: 0;
@@ -8,6 +12,10 @@ body {
   background: #0e572b;
 }
 
+/*
+ * Layout
+ */
+
 #container {
   background: linear-gradient(brown, orange, to right);
   display: flex;
@@ -17,6 +25,10 @@ body {
   padding: 30px;
   min-height: 100%;
 }
+
+/*
+ * Title
+ */
 
 h1 {
   font-size: 3rem;
