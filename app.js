@@ -109,7 +109,7 @@ class KnightPathfinder {
     if (position.length !== 2) return false;
     const x = position[0];
     const y = position[1];
-    return x >= 0 && x <= 9 && y >= 0 && y <= 9;
+    return x >= 0 && x <= 7 && y >= 0 && y <= 7;
   }
 
   _generatePossibleMoves(position) {
@@ -163,13 +163,13 @@ class Interface {
     // Create a document fragment for more optimized rendering
     const fragment = document.createDocumentFragment();
 
-    for (let i = 0; i <= 9; i++) {
+    for (let i = 0; i <= 7; i++) {
       // New row
       const row = document.createElement("tr");
 
-      for (let j = 0; j <= 9; j++) {
+      for (let j = 0; j <= 7; j++) {
         // Squares
-        const rowNumber = 9 - i; // Count rows from the bottom up so reverse the index number
+        const rowNumber = 7 - i; // Count rows from the bottom up so reverse the index number
         const colNumber = j;
         const square = document.createElement("td");
         square.classList.add("square");
