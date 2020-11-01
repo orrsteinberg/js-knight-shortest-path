@@ -9,7 +9,9 @@
 
 body {
   font-family: Arial, sans-serif;
-  background: #0e572b;
+  background: rgb(18,115,15);
+  background: linear-gradient(90deg, rgba(18,115,15,1) 0%, rgba(9,121,59,1) 50%, rgba(0,255,122,1) 100%);
+  font-size: 16px;
 }
 
 /*
@@ -79,6 +81,11 @@ h1 {
   transition: all 0.2s ease-in;
 }
 
+#board tr .square img {
+  max-height: 30px;
+  max-width: 30px;
+}
+
 #board tr .square.start {
   background: #35c135 !important;
   color: #fff;
@@ -89,5 +96,5 @@ h1 {
 }
 
 #board tr .square.active {
-  background: #ffc2c4 !important;
+  background: #fff4c9 !important
 }

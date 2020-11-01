@@ -214,7 +214,8 @@ class Interface {
 
     // Add starting position status to clicked square
     target.classList.add("start");
-    target.innerText = "O";
+    target.innerHTML = "<img src='knight.svg' alt='knight chess piece' />"
+    //target.innerText = "♘";
 
     // Remove event listener
     this._board.removeEventListener("click", this._startingPointClickHandler);
@@ -233,7 +234,7 @@ class Interface {
     this._endingPoint = this._parsePosition(target.id);
 
     // Return if user clicked on the same position as the starting position
-    if (this._pathfinder.comparePositions(this._endingPoint, this._startingPoint)) return;
+    if (target.nodeName === "IMG" || this._pathfinder.comparePositions(this._endingPoint, this._startingPoint)) return;
 
     // Remove event listener
     this._board.removeEventListener("click", this._endingPointClickHandler);
